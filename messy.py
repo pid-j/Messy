@@ -48,6 +48,9 @@ class Error:
 		self.message = message
 		self.name = name
 
+	def __str__(self) -> str:
+		return self.name + (f": {self.message}" if self.message else "")
+
 class IllegalCharError(Error):
 	def __init__(self, col: int, message: str) -> None:
 		super().__init__(col, message, "IllegalCharError")
@@ -72,6 +75,7 @@ class Process:
 		self.cidx += len(self.ptable) * int(self.cidx < 0)
 
 	def execute(self, string: str) -> None:
+		self.chidx = 0
 		while self.chidx < len(string):
 			JUMP_ERROR_MSG = makeErrorMessage(
 				self.chidx, string, "<stdin>",
@@ -171,9 +175,7 @@ class Process:
 
 # TEST
 if __name__ == "__main__":
-	Process().execute(
-		"=++++++++,+++++++++++++++++++++++++++++,+++++++,,+++,^=--------------------," \
-		"^++++++++++++++++++++++++++++++++,^==---------,--------,+++,------,--------," \
-		"^=-------------------------------,"
-	) # Expect to be "Hello, world!"
-	
+	print("Messy - Python Shell")
+	process = Process()
+	while True:
+		process.execute(input(">>> "))
