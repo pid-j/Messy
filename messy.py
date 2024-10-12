@@ -176,7 +176,7 @@ class Process:
 			
 	def execFromFile(self, filename: str) -> None:
 		with open(filename) as file:
-			self.execute(file.read)
+			self.execute(file.read())
 
 # TEST
 def parseArgs() -> tuple:
