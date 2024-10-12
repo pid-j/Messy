@@ -106,7 +106,7 @@ class Process:
 				self.ptable[self.cidx] = 0
 				self.chidx += 1
 				continue
-			if char == " ":
+			if char in " \t\n":
 				self.chidx += 1
 				continue
 			if char == "<":
@@ -206,6 +206,7 @@ def main() -> None:
 	process.fn = args[1]
 	if args[0]:
 		process.execFromFile(args[1])
+		return
 	
 	print("Messy - Python Shell")
 	while True:
