@@ -174,9 +174,9 @@ class Process:
 			print(CHAR_ERROR_MSG)
 			break
 			
-		def execFromFile(self, filename: str) -> None:
-			with open(filename) as file:
-				self.execute(file.read)
+	def execFromFile(self, filename: str) -> None:
+		with open(filename) as file:
+			self.execute(file.read)
 
 # TEST
 def parseArgs() -> tuple:
