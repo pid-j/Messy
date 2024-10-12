@@ -32,12 +32,12 @@ next cell's value.
 
 You can use . to output the current cell's value as an integer, and , to output it as its corresponding Unicode character.
 """
+# IMPORTS
+import argparse
+
 # FUNCTIONS
 def makeErrorMessage(col: int, string: str, file: str, error) -> str:
-	buffer = f"...{string[col]}..."
-	buffer += "\n   "
-	buffer += "^\n\n"
-	buffer += f"File {file}, column {col}\n"
+	buffer = f"File {file}, column {col}\n"
 	buffer += error.name + (f": {error.message}" if error.message else "")
 	return buffer
 
@@ -65,6 +65,7 @@ class Process:
 		self.ptable = [0 for idx in range(1000)]
 		self.cidx = 0
 		self.chidx = 0
+		self.fn = None
 
 	def goRight(self) -> None:
 		self.cidx += 1
@@ -78,7 +79,7 @@ class Process:
 		self.chidx = 0
 		while self.chidx < len(string):
 			JUMP_ERROR_MSG = makeErrorMessage(
-				self.chidx, string, "<stdin>",
+				self.chidx, string, self.fn,
 				IllegalJumpError(
 					self.chidx,
 					"Attempted to perform jump by 10 instructions backward"
@@ -165,17 +166,50 @@ class Process:
 				self.chidx += 1
 				continue
 			CHAR_ERROR_MSG = makeErrorMessage(
-				self.chidx, string, "<stdin>",
+				self.chidx, string, self.fn,
 				IllegalCharError(
 					self.chidx,
 					f"Illegal character \"{char}\"")
 			)
 			print(CHAR_ERROR_MSG)
 			break
+			
+		def execFromFile(self, filename: str) -> None:
+			with open(filename) as file:
+				self.execute(file.read)
 
 # TEST
-if __name__ == "__main__":
-	print("Messy - Python Shell")
+def parseArgs() -> tuple:
+	parser = argparse.ArgumentParser(
+		prog="Messy",
+		description=(
+			"Messy is a programming language that is designed" \
+			"\nto be as messy as possible. It is an alteration of BrainF. Messy is" \
+			"\nnamed like that because I wanted to."
+		)
+	)
+		
+	parser.add_argument(
+		"-f", "--filename",
+		help="An optional file to run.")
+		
+	args = parser.parse_args()
+	if args.filename:
+		return True, args.filename
+		
+	return False, "<stdin>"
+
+def main() -> None:
+	args = parseArgs()
 	process = Process()
+	
+	process.fn = args[1]
+	if args[0]:
+		process.execFromFile(args[1])
+	
+	print("Messy - Python Shell")
 	while True:
 		process.execute(input(">>> "))
+
+if __name__ == "__main__":
+	main()
