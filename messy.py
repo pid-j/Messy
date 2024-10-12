@@ -141,7 +141,7 @@ class Process:
 				pidx = (self.cidx + 1) % len(self.ptable)
 				if self.ptable[self.cidx] > self.ptable[pidx]:
 					self.chidx -= 10
-					if self.chidx > 0:
+					if self.chidx < 0:
 						print(JUMP_ERROR_MSG)
 						break
 					continue
